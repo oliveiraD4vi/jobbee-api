@@ -1,7 +1,5 @@
-module.exports = (app) => {
-  app.get("/", (req, res) => {
-    res.status(200).json({
-      message: "Hello World!",
-    });
-  });
+const JobsRoutes = require("./jobs/jobs");
+
+module.exports = (router) => {
+  JobsRoutes(router);
 };
