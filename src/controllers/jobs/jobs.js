@@ -105,3 +105,50 @@ exports.getJob = async (req, res, next) => {
     data: job,
   });
 };
+
+exports.getJobStats = async (req, res, next) => {
+  const stats = await Job.aggregate([
+    {
+      $match: {
+        $text: {
+          $search: `\"${req.params.topic}\"`,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          $toUpper: "$experience",
+        },
+        totalJobs: {
+          $sum: 1,
+        },
+        avgPosition: {
+          $avg: "$positions",
+        },
+        avgSalary: {
+          $avg: "$salary",
+        },
+        minSalary: {
+          $min: "$salary",
+        },
+        maxSalary: {
+          $max: "$salary",
+        },
+      },
+    },
+  ]);
+
+  if (stats.length === 0) {
+    return res.status(400).json({
+      error: true,
+      message: "Not found",
+    });
+  }
+
+  return res.status(200).json({
+    error: false,
+    message: "Success",
+    data: stats,
+  });
+};
