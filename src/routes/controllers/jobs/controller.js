@@ -4,7 +4,7 @@ const geoCoder = require("../../../utils/geocoder");
 exports.getJobs = async (req, res, next) => {
   const jobs = await Job.find({});
 
-  res.status(200).json({
+  return res.status(200).json({
     error: false,
     message: "Success",
     results: jobs.length,
@@ -15,7 +15,7 @@ exports.getJobs = async (req, res, next) => {
 exports.newJob = async (req, res, next) => {
   const job = await Job.create(req.body);
 
-  res.status(200).json({
+  return res.status(200).json({
     error: false,
     message: "Job created",
     data: job,
@@ -39,10 +39,32 @@ exports.getJobsInRadius = async (req, res, next) => {
     },
   });
 
-  res.status(200).json({
+  return res.status(200).json({
     error: false,
     message: "Success",
     results: jobs.length,
     data: jobs,
+  });
+};
+
+exports.updateJob = async (req, res, next) => {
+  let job = await Job.findById(req.params.id);
+
+  if (!job) {
+    return res.status(404).json({
+      error: true,
+      message: "Not found",
+    });
+  }
+
+  job = await Job.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  return res.status(200).json({
+    error: false,
+    message: "Job is updated",
+    data: job,
   });
 };
