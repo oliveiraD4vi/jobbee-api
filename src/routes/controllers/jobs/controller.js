@@ -86,3 +86,22 @@ exports.deleteJob = async (req, res, next) => {
     message: "Job is deleted",
   });
 };
+
+exports.getJob = async (req, res, next) => {
+  const job = await Job.find({
+    $and: [{ _id: req.params.id }, { slug: req.params.slug }],
+  });
+
+  if (!job || job.length === 0) {
+    return res.status(400).json({
+      error: true,
+      message: "Not found",
+    });
+  }
+
+  return res.status(200).json({
+    error: false,
+    message: "Job found",
+    data: job,
+  });
+};
