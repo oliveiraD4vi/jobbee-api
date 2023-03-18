@@ -3,7 +3,7 @@ const validator = require("validator");
 const slugify = require("slugify");
 const geoCoder = require("../../utils/geocoder");
 
-const jobScheme = new mongoose.Schema({
+const jobSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, "Please enter the Job title"],
@@ -109,12 +109,12 @@ const jobScheme = new mongoose.Schema({
   },
 });
 
-jobScheme.pre("save", async function (next) {
+jobSchema.pre("save", async function (next) {
   this.slug = await slugify(this.title, { lower: true });
   next();
 });
 
-jobScheme.pre("save", async function (next) {
+jobSchema.pre("save", async function (next) {
   const loc = await geoCoder.geocode(this.address);
 
   this.location = {
@@ -129,4 +129,4 @@ jobScheme.pre("save", async function (next) {
   next();
 });
 
-module.exports = mongoose.model("Job", jobScheme);
+module.exports = mongoose.model("Job", jobSchema);

@@ -1,5 +1,5 @@
-const Job = require("../../../models/jobs/jobs");
-const geoCoder = require("../../../utils/geocoder");
+const Job = require("../../models/jobs/jobs");
+const geoCoder = require("../../utils/geocoder");
 
 exports.getJobs = async (req, res, next) => {
   const jobs = await Job.find({});

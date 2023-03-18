@@ -1,4 +1,4 @@
-const connectDB = require("./src/models/database");
+const connectDB = require("./config/database");
 const express = require("express");
 const cors = require("cors");
 
