@@ -1,7 +1,10 @@
 // Imports
+const connectDB = require("./src/models/database");
 const express = require("express");
-const router = express.Router();
 const cors = require("cors");
+
+// Instances
+const router = express.Router();
 const app = express();
 
 // App configuration
@@ -12,6 +15,9 @@ app.use("/api", router);
 // Required imports
 require("dotenv/config");
 require("./src/routes/index")(router);
+
+// Connection to DB
+connectDB();
 
 // Server initialization
 app.listen(process.env.PORT | 3000);
