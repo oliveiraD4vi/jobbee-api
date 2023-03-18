@@ -1,6 +1,6 @@
-const { getJobs, createJob } = require("../controllers/jobs/controller");
+const { getJobs, newJob } = require("../controllers/jobs/controller");
 
 module.exports = (router) => {
   router.route("/jobs").get(getJobs);
-  router.route("/jobs").post(createJob);
+  router.route("/jobs").post(newJob);
 };
