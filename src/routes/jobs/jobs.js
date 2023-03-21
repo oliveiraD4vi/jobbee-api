@@ -1,21 +1,21 @@
 const {
-  getJobs,
-  newJob,
+  getAllJobs,
+  createNewJob,
   getJobsInRadius,
   updateJob,
   deleteJob,
-  getJob,
   getJobStats,
+  getJobByIdSlug,
 } = require("../../controllers/jobs/jobs");
 
 module.exports = (router) => {
   // GET
-  router.route("/jobs").get(getJobs);
-  router.route("/jobs/:id/:slug").get(getJob);
+  router.route("/jobs").get(getAllJobs);
   router.route("/stats/:topic").get(getJobStats);
+  router.route("/jobs/:id/:slug").get(getJobByIdSlug);
   router.route("/jobs/radius/:zipcode/:distance").get(getJobsInRadius);
   // POST
-  router.route("/jobs").post(newJob);
+  router.route("/jobs").post(createNewJob);
   // PUT
   router.route("/jobs/:id").put(updateJob);
   // DELETE
