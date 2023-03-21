@@ -1,10 +1,13 @@
 const Job = require("../../models/jobs/jobs");
+const Filters = require("../../utils/filters");
 const geoCoder = require("../../utils/geocoder");
 const ErrorHandler = require("../../utils/errorHandler");
 const catchAsyncError = require("../../middlewares/asyncErrors");
 
 exports.getAllJobs = catchAsyncError(async (req, res, next) => {
-  await Job.find({}).then((jobs) => {
+  const filters = new Filters(Job.find(), req.query).filter();
+
+  await filters.query.then((jobs) => {
     const message =
       jobs.length > 0
         ? "Jobs found successfully"
