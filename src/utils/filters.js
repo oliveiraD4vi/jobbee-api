@@ -49,4 +49,14 @@ module.exports = class Filters {
 
     return this;
   }
+
+  pagination() {
+    const page = parseInt(this.string.page, 10) || 1;
+    const limit = parseInt(this.string.limit, 10) || 10;
+    const skipResults = (page - 1) * limit;
+
+    this.query = this.query.skip(skipResults).limit(limit);
+
+    return this;
+  }
 };

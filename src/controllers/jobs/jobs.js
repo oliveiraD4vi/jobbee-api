@@ -5,11 +5,13 @@ const ErrorHandler = require("../../utils/errorHandler");
 const catchAsyncError = require("../../middlewares/asyncErrors");
 
 exports.getAllJobs = catchAsyncError(async (req, res, next) => {
+  const documentsCount = await Job.countDocuments();
   const filters = new Filters(Job.find(), req.query)
     .filter()
     .sort()
     .limitFields()
-    .searchByQuery();
+    .searchByQuery()
+    .pagination();
 
   await filters.query.then((jobs) => {
     const message =
@@ -20,7 +22,8 @@ exports.getAllJobs = catchAsyncError(async (req, res, next) => {
     return res.status(200).json({
       error: false,
       message,
-      results: jobs.length,
+      count: jobs.length,
+      total: documentsCount,
       data: jobs,
     });
   });
