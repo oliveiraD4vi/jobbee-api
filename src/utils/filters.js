@@ -36,4 +36,17 @@ module.exports = class Filters {
 
     return this;
   }
+
+  searchByQuery() {
+    if (this.string.q) {
+      const qu = this.string.q.split("-").join(" ");
+      this.query = this.query.find({
+        $text: {
+          $search: `\"${qu}\"`,
+        },
+      });
+    }
+
+    return this;
+  }
 };

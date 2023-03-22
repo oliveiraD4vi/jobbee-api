@@ -8,7 +8,8 @@ exports.getAllJobs = catchAsyncError(async (req, res, next) => {
   const filters = new Filters(Job.find(), req.query)
     .filter()
     .sort()
-    .limitFields();
+    .limitFields()
+    .searchByQuery();
 
   await filters.query.then((jobs) => {
     const message =
