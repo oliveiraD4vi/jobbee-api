@@ -1,7 +1,9 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const validator = require("validator");
+
 const geoCoder = require("../../utils/geocoder");
-const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -73,7 +75,14 @@ userSchema.pre("save", async function (next) {
     zipcode: loc[0].zipcode,
     country: loc[0].countryCode,
   };
+
   next();
 });
+
+userSchema.methods.getJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_KEY, {
+    expiresIn: process.env.JWT_EXPIRES_TIME,
+  });
+};
 
 module.exports = mongoose.model("User", userSchema);

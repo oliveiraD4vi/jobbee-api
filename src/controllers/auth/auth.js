@@ -13,11 +13,14 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     password,
     role,
     address,
-  }).then((user) => {
+  }).then(async (user) => {
+    const token = await user.getJwtToken();
+
     return res.status(200).json({
       error: false,
       message: "User successfully created",
       data: user,
+      token,
     });
   });
 });
