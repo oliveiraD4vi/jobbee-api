@@ -9,7 +9,29 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    validate: [validator.isEmail, "Please add a valida email address"],
+    unique: true,
+    required: [true, "Please enter a email address"],
+    validate: [validator.isEmail, "Please add a valid email address"],
+  },
+  password: {
+    type: String,
+    required: [true, "Please enter a password"],
+    minLength: [8, "Your passord needs to be at least 8 characters long"],
+    select: false,
+  },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
+  role: {
+    type: String,
+    enum: {
+      values: ["user", "employeer"],
+      message: "Please select a valida role",
+    },
+    default: "user",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
   address: {
     type: String,
