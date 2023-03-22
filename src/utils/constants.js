@@ -1,1 +1,1 @@
-exports.filterFieldsToRemove = ["sort"];
+exports.filterFieldsToRemove = ["sort", "fields"];

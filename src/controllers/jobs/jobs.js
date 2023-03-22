@@ -5,7 +5,10 @@ const ErrorHandler = require("../../utils/errorHandler");
 const catchAsyncError = require("../../middlewares/asyncErrors");
 
 exports.getAllJobs = catchAsyncError(async (req, res, next) => {
-  const filters = new Filters(Job.find(), req.query).filter().sort();
+  const filters = new Filters(Job.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields();
 
   await filters.query.then((jobs) => {
     const message =

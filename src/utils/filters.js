@@ -25,4 +25,15 @@ module.exports = class Filters {
 
     return this;
   }
+
+  limitFields() {
+    if (this.string.fields) {
+      const fields = this.string.fields.split(",").join(" ");
+      this.query = this.query.select(fields);
+    } else {
+      this.query = this.query.select("-__v");
+    }
+
+    return this;
+  }
 };
