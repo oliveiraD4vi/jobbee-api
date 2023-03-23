@@ -1,10 +1,8 @@
 const User = require("../../models/users/users");
-const Filters = require("../../utils/filters");
-// const geoCoder = require("../../utils/geocoder");
-// const ErrorHandler = require("../../utils/errorHandler");
+const ErrorHandler = require("../../utils/errorHandler");
 const catchAsyncError = require("../../middlewares/asyncErrors");
 
-exports.registerUser = catchAsyncError(async (req, res, next) => {
+exports.register = catchAsyncError(async (req, res, next) => {
   const { name, email, password, role, address } = req.body;
 
   await User.create({
@@ -23,4 +21,34 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
       token,
     });
   });
+});
+
+exports.login = catchAsyncError(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new ErrorHandler("Please enter email & password", 400));
+  }
+
+  await User.findOne({ email })
+    .select("+password")
+    .then(async (user) => {
+      const isMatched = await user.comparePassword(password);
+
+      if (!isMatched) {
+        return next(new ErrorHandler("Invalid Email or Password", 401));
+      }
+
+      const token = await user.getJwtToken();
+
+      return res.status(200).json({
+        error: false,
+        message: "User successfully logged",
+        data: user,
+        token,
+      });
+    })
+    .catch(() => {
+      return next(new ErrorHandler("Invalid Email or Password", 401));
+    });
 });
