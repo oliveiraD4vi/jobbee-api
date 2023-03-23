@@ -1,6 +1,7 @@
 const errorMiddleware = require("./src/middlewares/errors");
 const ErrorHandler = require("./src/utils/errorHandler");
 const connectDB = require("./config/database");
+const cookieParser = require("cookie-parser");
 const express = require("express");
 const cors = require("cors");
 
@@ -15,6 +16,7 @@ process.on("uncaughtException", (err) => {
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api", router);
 app.all("*", (req, res, next) => {
   next(new ErrorHandler(`${req.originalUrl} Route Not Found`, 404));
