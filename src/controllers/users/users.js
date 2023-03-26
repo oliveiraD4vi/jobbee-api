@@ -1,7 +1,5 @@
 const User = require("../../models/users/users");
 const Filters = require("../../utils/filters");
-// const geoCoder = require("../../utils/geocoder");
-// const ErrorHandler = require("../../utils/errorHandler");
 const catchAsyncError = require("../../middlewares/asyncErrors");
 
 exports.getAllUsers = catchAsyncError(async (req, res, next) => {
