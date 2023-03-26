@@ -2,6 +2,7 @@ const {
   isAuthenticatedUser,
   authorizeRoles,
 } = require("../../middlewares/auth");
+
 const {
   getAllJobs,
   createNewJob,
