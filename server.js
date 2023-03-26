@@ -5,14 +5,15 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const cors = require("cors");
 
+const {
+  uncaughtException,
+  unhandledRejection,
+} = require("./src/utils/serverErrors");
+
 const router = express.Router();
 const app = express();
 
-process.on("uncaughtException", (err) => {
-  console.log(`ERROR: ${err.message}`);
-  console.log("Shutting down the server due to Uncaught Exception");
-  process.exit(1);
-});
+process.on("uncaughtException", (err) => uncaughtException(err));
 
 app.use(cors());
 app.use(express.json());
@@ -28,10 +29,4 @@ connectDB();
 
 const server = app.listen(process.env.PORT | 3000);
 
-process.on("unhandledRejection", (err) => {
-  console.log(`ERROR: ${err.message}`);
-  console.log("Shutting down the server due to Unhandled Promise Rejection");
-  server.close(() => {
-    process.exit(1);
-  });
-});
+process.on("unhandledRejection", (err) => unhandledRejection(err, server));
