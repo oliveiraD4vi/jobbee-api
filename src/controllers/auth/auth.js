@@ -95,7 +95,9 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new ErrorHandler("Password Reset token is invalid", 400));
+    return next(
+      new ErrorHandler("Password Reset token is invalid or expired", 400)
+    );
   }
 
   user.password = req.body.password;
