@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const User = require("../../models/users/users");
 const ErrorHandler = require("../../utils/errorHandler");
 const catchAsyncError = require("../../middlewares/asyncErrors");
@@ -54,7 +56,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}://${req.get(
     "host"
-  )}/api/password/reset/${resetToken}`;
+  )}/api/auth/password/reset/${resetToken}`;
 
   const message = `Your password reset link: ${resetUrl}`;
 
@@ -77,4 +79,30 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
     return next(new ErrorHandler(err.message, 500));
   }
+});
+
+exports.resetPassword = catchAsyncError(async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: {
+      $gt: Date.now(),
+    },
+  });
+
+  if (!user) {
+    return next(new ErrorHandler("Password Reset token is invalid", 400));
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  sendToken(user, "Password successfully changed", 200, res);
 });
