@@ -30,6 +30,8 @@ exports.getAllJobs = catchAsyncError(async (req, res, next) => {
 });
 
 exports.createNewJob = catchAsyncError(async (req, res, next) => {
+  req.body.user = req.user.id;
+
   await Job.create(req.body).then((job) => {
     return res.status(200).json({
       error: false,

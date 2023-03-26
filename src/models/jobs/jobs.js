@@ -107,6 +107,11 @@ const jobSchema = new mongoose.Schema({
     type: [Object],
     select: false,
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: [true, "Please enter an valid User"],
+  },
 });
 
 jobSchema.pre("save", async function (next) {
