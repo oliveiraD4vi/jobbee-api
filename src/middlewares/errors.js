@@ -13,7 +13,7 @@ module.exports = (err, req, res, next) => {
   }
 
   if (process.env.NODE_ENV === "production") {
-    let error = { ...err };
+    let error = { message: err.message, statusCode: err.statusCode };
 
     // Handling Mongoose Validation Error
     if (err.name === "ValidationError") {
